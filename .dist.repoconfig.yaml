@@ -2,5 +2,6 @@ repo: organization/repo
 branch: main
 path: /path/to/repo
 remote: origin
+user: admin
 cmd: |
   echo "Optional command after pulling repo"
