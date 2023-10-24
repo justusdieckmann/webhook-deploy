@@ -5,9 +5,16 @@ if ($_SERVER['HTTP_X_GITHUB_EVENT'] !== 'push') {
     die();
 }
 
-$json = escapeshellarg(base64_encode(file_get_contents('php://input')));
-$signature = escapeshellarg(base64_encode($_SERVER['HTTP_X_HUB_SIGNATURE_256']));
+echo "Hi GitHub :)\n";
 
-[$code, $value] = explode(' - ', shell_exec("/var/deploy/elevator $json $signature") . "\n", 2);
+$json = base64_encode(file_get_contents('php://input'));
+$signature = base64_encode($_SERVER['HTTP_X_HUB_SIGNATURE_256']);
+
+$out = [];
+$code = null;
+exec("/var/deploy/elevator $json $signature 2>&1", $out, $code);
+
+$code = $code ?: 200;
+
 http_response_code($code);
-echo $value;
+echo join(PHP_EOL, $out);
