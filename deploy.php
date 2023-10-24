@@ -3,20 +3,22 @@
 <?php
 
 if (php_sapi_name() !== 'cli') {
-    die('403 - only cli access allowed');
+    echo "[only cli access allowed]";
+    exit(403);
 }
 
 require_once('./config.php');
 global $CFG;
 
-$json = base64_decode($argv[2]);
-$signature = base64_decode($argv[3]);
+$json = base64_decode($argv[1]);
+$signature = base64_decode($argv[2]);
 
 if ('sha256=' . hash_hmac('sha256', $json, $CFG->secret) !== $signature ?? null) {
-    die('406 - invalid signature');
+    echo "[invalid signature]";
+    exit(406);
 }
 
-echo "200 - OK";
+echo "[OK]";
 
 $data = json_decode($json, true);
 
@@ -32,14 +34,17 @@ foreach(scandir($CFG->configdir) as $configfile) {
     if ($data['repository']['full_name'] === $yaml['repo'] &&
         $data['ref'] === 'refs/heads/' . $branch) {
 
-        echo "* Pulling " . $yaml['path'] . "\n";
+        echo "* Pulling {$yaml['path']}\n";
 
         $remote = $yaml['remote'] ?? 'origin';
         $user = $yaml['user'] ?? 'admin';
         chdir($yaml['path']);
-        echo shell_exec("sudo -u $user git fetch $remote && git checkout $remote/$branch") . "\n";
+        echo shell_exec("sudo -u $user git fetch $remote && sudo -u $user git checkout $remote/$branch") . "\n";
         if (isset($yaml['cmd'])) {
-            echo shell_exec("sudo -u $user {$yaml['cmd']}") . "\n";
+            $out = [];
+            $cmd = escapeshellarg($yaml['cmd']);
+            exec("sudo -u $user bash -c $cmd", $out) . "\n";
+            echo implode(PHP_EOL, $out);
         }
     }
 }
