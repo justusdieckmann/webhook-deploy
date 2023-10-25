@@ -12,7 +12,7 @@ fi
 
 config_dir=$(realpath "$1")
 
-if [ ! -d $config_dir ]; then
+if [ ! -d "$config_dir" ]; then
   echo "[ABORT] The config directory doesnt exist"
   exit
 fi
@@ -31,7 +31,7 @@ cp deploy.php "$config_dir/deploy.php"
 chmod 700  "$config_dir/deploy.php"
 
 # example repo config
-cp .dist.repoconfig.php "$config_dir"
+cp .dist.repoconfig.yaml "$config_dir"
 
 echo -e '#! /bin/bash\necho "Hallo, du bist doof!"' > /etc/update-motd.d/webhook-deploy
 chmod a+x /etc/update-motd.d/webhook-deploy
