@@ -1,6 +1,6 @@
 <?php
 
-if ($_SERVER['HTTP_X_GITHUB_EVENT'] !== 'push') {
+if (isset($_SERVER['HTTP_X_GITHUB_EVENT']) && $_SERVER['HTTP_X_GITHUB_EVENT'] !== 'push') {
     http_response_code(418);
     die();
 }
