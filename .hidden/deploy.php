@@ -7,7 +7,7 @@ if (php_sapi_name() !== 'cli') {
     exit(403);
 }
 
-require_once('./config.php');
+require_once('/var/deploy/config.php');
 global $CFG;
 
 $json = base64_decode($argv[1]);
@@ -18,7 +18,7 @@ if ('sha256=' . hash_hmac('sha256', $json, $CFG->secret) !== $signature ?? null)
     exit(406);
 }
 
-echo "[OK]";
+echo "[OK]\n";
 
 $data = json_decode($json, true);
 
