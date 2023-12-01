@@ -43,7 +43,7 @@ foreach(scandir($CFG->configdir) as $configfile) {
         if (isset($yaml['cmd'])) {
             $out = [];
             $cmd = escapeshellarg($yaml['cmd']);
-            exec("sudo -u $user bash -c $cmd", $out) . "\n";
+            exec("sudo -u $user -i bash -c $cmd", $out) . "\n";
             echo implode(PHP_EOL, $out);
         }
     }
