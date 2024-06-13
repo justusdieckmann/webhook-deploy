@@ -32,7 +32,4 @@ chmod 700  "$config_dir/deploy.php"
 
 # example repo config
 cp .dist.repoconfig.yaml "$config_dir"
-
-echo -e '#! /bin/bash\necho "Hallo, du bist doof!"' > /etc/update-motd.d/webhook-deploy
-chmod a+x /etc/update-motd.d/webhook-deploy
 echo "[DONE] Success: your config dir is $config_dir"
